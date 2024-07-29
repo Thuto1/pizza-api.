@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spiller's Pizzas</title>
+  <script src="//cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body x-data="pizzaCart">
+  <!-- <h1 x-text="title"></h1> -->
+ 
+  <div class="info"> 
+    <div>
+      <h1>Spiller's Pizzas</h1>
+    <h5 class="center-text">home of delicious pizzas, made with warm hands and great care</h5>
+    </div>
+    
+    <div>
+      <img src="Pizza design menu vector image on VectorStock.jpg" alt="" width="80%">
+    </div>
+  </div>
+  
+  
+    
+  </div>
+
+
+  <div>
+    <div class="container">
+      
+      <div>
+        <div class="buttons">
+          Username: <input type="text" x-model="username">
+          <button @click="login" x-show="!cartId" class="login-btn">Login</button>
+          <button @click="logout" x-show="username && cartId" class="logout-btn"> Logout</button>
+        </div>
+
+
+        <!-- order history -->
+
+        
+
+
+         <!-- show some thank you message -->
+         <div class="thank-you"    x-show="showThankYouMessage">
+          Thank you for visiting our pizza site!
+         </div>
+
+          <!--  -->
+
+
+        <div class="cart-info" x-show="cartId">
+          Cart code: <span x-text="cartId"></span>
+        </div>
+
+      </div>
+
+
+
+
+        <!-- Here we are shoowing previous carts -->
+
+       
+
+
+        <!--  -->
+
+
+      <div class="cart">
+
+        
+
+          <div x-show="cartTotal > 0">
+              <h2>Your cart</h2>
+              <div class="message" x-text="message">message here</div>
+              <table>
+                  <tr>
+                      <th>flavour</th>
+                      <th>size</th>
+                      <th>price</th>
+                      <th>qty</th>
+                      <th>total</th>=
+                  </tr>
+
+                  <template x-for="pizza in cartPizzas
+                ">
+                    <tr>
+                      <td x-text="pizza.flavour"></td>
+                      <td x-text="pizza.size"></td>
+                      <td x-text="pizza.price"></td>
+                      <td>
+                          <button @click="addPizzaToCart(pizza.id)">+</button>
+                          x<span x-text="pizza.qty"></span>
+                          <button @click="removePizzaFromCart(pizza.id)" >-</button>
+                      </td>
+                      <td x-text="pizza.total"></td>
+                  </tr>
+                  </template>
+                
+
+                  <tr>
+                      <td colspan="4">Total</td>
+                      <td>R <span x-text="cartTotal"></span> </td>
+                  </tr>
+                  <tr>
+                      <td colspan="3">Pay now</td>
+                      <td>
+                          <input x-model="paymentAmount" type="text">
+                      </td>
+                      <td><button @click="payToCart()">Pay</button></td>
+                  </tr>
+                  <!-- here we are giving change -->
+                  <tr x-show="change !== null">
+                    <td colspan="4">Change</td>
+                    <td>R <span x-text="change"></span></td>
+                </tr>
+
+                <!--  -->
+              </table>
+
+            </div>
+      </div>
+    </div>
+
+
+     <!-- history cart -->
+
+     <!-- Button to Show Cart History -->
+     <button @click="toggleCartHistory">Cart History</button>
+
+     <!-- Conditional Rendering for Previous Carts -->
+     <template x-if="cartHistoryVisible">
+       <div class="previous-carts" x-show="previousCarts.length > 0">
+         <h2>Previous Orders</h2>
+         <template x-for="order in previousCarts" :key="order.id">
+           <div class="order">
+             <p><strong>Order ID:</strong> <span x-text="order.id"></span></p>
+             <p><strong>Total :</strong> R<span x-text="order.total"></span></p>
+             <p> <strong>Pizza :</strong> <span x-text="pizza.flavour"></span></p>
+             <p> <strong>Size :</strong> <span x-text="pizza.size"></span></p>
+             <p> <strong>Qty :</strong> <span x-text="pizza.qty"></span></p>
+             <div class="order-pizzas">
+               <template x-for="pizza in order.pizzas" :key="pizza.id">
+                 <p>
+                  
+                  
+                  
+                 </p>
+               </template>
+             </div>
+           </div>
+         </template>
+         <!-- Button to Close Cart History -->
+         <button @click="toggleCartHistory">Close Cart History</button>
+       </div>
+     </template>
+
+
+     <!--  -->
+
+  </div>
+  <div class="pizzas" x-show="username && cartId">
+    <h2>Pizzas</h2>
+    <template x-for="pizza in pizzas">
+      <div class="pizza">
+        <img src="pizza.png" alt="pizza" width="100px">
+        <h5 x-text="pizza.flavour"></h5>
+        <span x-text="pizza.size"></span> @
+        <strong>
+          R<span x-text="pizza.price"></span>
+        </strong>
+        <div>
+          <button class="btn" @click="addPizzaToCart(pizza.id)">Add to cart</button>
+        </div>
+        
+      </div>
+      
+    </template>
+  </div>
+
+<br><br>
+  <div class="contact-container">
+    <form action="https://api.web3forms.com/submit" method="POST" class="contact-left">
+      <div class="contact-left-title">
+        <h2>Get In Touch</h2>
+        <hr>
+      </div>
+      <input type="hidden" name="access_key" value="bcef6227-0d81-4a1e-9db6-d82d0ccec744">
+      <input type="text" name="name" placeholder="your name" class="contact-inputs" required>
+      <input type="email" name="email" placeholder="your email" class="contact-inputs" required>
+      <textarea name="message" placeholder="your comment" class="contact-inputs" required></textarea>
+      <button type="submit">Submit <img src="assets/arrow_icon.png" alt=""> </button>
+    </form>
+    <div class="contact-right">
+      <img src="/assets/right_img.png" alt="">
+    </div>
+
+  </div>
+  
+  
+
+
+
+  <script src="pizza.js"></script>
+</body>
+</html>
